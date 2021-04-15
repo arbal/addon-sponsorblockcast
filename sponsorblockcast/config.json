@@ -1,0 +1,13 @@
+{
+    "name": "sponsorblockcast",
+    "version": "0.0.1",
+    "slug": "sponsorblockcast",
+    "description": "sponsorblockcast",
+    "url": "https://github.com/MrYadro/addon-sponsorblockcast",
+    "arch": ["aarch64", "amd64", "armhf", "armv7", "i386"],
+    "startup": "services",
+    "boot": "auto",
+    "hassio_api": false,
+    "homeassistant_api": false,
+    "host_network": true
+  }
