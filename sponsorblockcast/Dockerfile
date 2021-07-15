@@ -1,25 +1,19 @@
 ARG BUILD_FROM=ghcr.io/hassio-addons/base/amd64:10.0.0
 # hadolint ignore=DL3006
 FROM ${BUILD_FROM}
-
-ARG TARGETOS
-ARG TARGETARCH
-ARG TARGETVARIANT
-
-RUN apk --no-cache add jq bc grep curl \
-  && GC_URL=`wget https://api.github.com/repos/vishen/go-chromecast/releases/latest -O - | jq -r '.assets[].browser_download_url' | grep linux_${BUILD_ARCH}` \
+ARG GC_BUILD=linux_armv7
+ADD sponsorblockcast.sh /usr/bin/sponsorblockcast
+RUN apk -U add jq bc grep curl \
+  && GC_URL=`wget https://api.github.com/repos/vishen/go-chromecast/releases/latest -O - | jq -r '.assets[].browser_download_url' | grep $GC_BUILD` \
   && wget $GC_URL -O /root/go-chromecast.tgz \
   && tar xzf /root/go-chromecast.tgz -C /usr/bin \
-  && rm -rf /root/* \
-  && chmod +x /usr/bin/go-chromecast
-
+  && chmod +x /usr/bin/sponsorblockcast \
+  && chmod +x /usr/bin/go-chromecast \
+  && rm -rf /var/cache/apk/* /lib/apk/db/* /root/*
 ENV SBCPOLLINTERVAL 1
 ENV SBCSCANINTERVAL 300
 ENV SBCCATEGORIES sponsor
 ENV SBCDIR /tmp/sponsorblockcast
-
-ADD sponsorblockcast.sh /usr/bin/sponsorblockcast
-
 # Build arguments
 ARG BUILD_ARCH
 ARG BUILD_DATE
